@@ -91,22 +91,21 @@
 
   ScrollSpy.prototype.activate = function (target) {
     
-    this.activeTarget = target;
+      this.activeTarget = target;
 
-    $( this.selector ).parents('.active')
-                      .removeClass('active');
+      $( this.selector ).parents('.active')
+                        .removeClass('active');
 
-    var selector = this.selector + '[data-target="' + target + '"],' +
-                   this.selector + '[href="' + target + '"]';
+      var selector = this.selector + '[data-target="' + target + '"],' +
+                     this.selector + '[href="' + target + '"]',
+          active = $(selector).parents('li')
+                              .addClass('active');
 
-    var active = $(selector).parents('li')
-                            .addClass('active');
+      if( active.parent('.dropdown-menu').length )
+          active = active.closest('li.dropdown')
+                         .addClass('active');
 
-    if( active.parent('.dropdown-menu').length )
-        active = active.closest('li.dropdown')
-                       .addClass('active');
-
-    active.trigger('activate.bs.scrollspy');
+      active.trigger('activate.bs.scrollspy');
   }
 
 
