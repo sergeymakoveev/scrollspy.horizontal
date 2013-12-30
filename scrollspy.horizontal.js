@@ -15,15 +15,14 @@
   // ==========================
 
   function ScrollSpyHorizontal(element, options) {
-      var href,
-          process  = $.proxy(this.process, this);
+      var process  = $.proxy(this.process, this);
 
       this.$element       = $(element).is('body') ? $(window) : $(element);
       this.$body          = $('body');
       this.$scrollElement = this.$element.on({ 'scroll.bs.scroll-spy-horizontal.data-api' : process });
       this.options        = $.extend({}, ScrollSpyHorizontal.DEFAULTS, options);
       this.selector       = ( this.options.target ||
-                              ((href = $(element).attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) ||//strip for ie7
+                              ($(element).attr('href') || '').replace(/.*(?=#[^\s]+$)/, '') || //strip for ie7
                               '' ) + ' .nav li > a';
       this.offsets        = $([]);
       this.targets        = $([]);
@@ -39,7 +38,7 @@
 
   ScrollSpyHorizontal.prototype.refresh = function () {
 
-      var offsetMethod = this.$element[0] == window ? 'offset' : 'position'
+      var offsetMethod = $.isWindow(this.$element.get(0)) ? 'offset' : 'position'
 
       this.offsets = $([]);
       this.targets = $([]);
@@ -56,7 +55,7 @@
 
                             return ( $href &&
                                      $href.length &&
-                                     [[ $href[offsetMethod]().top + (!$.isWindow(self.$scrollElement.get(0)) && self.$scrollElement.scrollTop()),
+                                     [[ $href[offsetMethod]().left + (!$.isWindow(self.$scrollElement.get(0)) && self.$scrollElement.scrollLeft()),
                                         href ]] ) || null;
                           })
                          .sort(function (a, b) { return a[0] - b[0]; })
@@ -68,23 +67,23 @@
 
   ScrollSpyHorizontal.prototype.process = function () {
 
-      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset,
-          scrollHeight = this.$scrollElement[0].scrollHeight ||
-                         this.$body[0].scrollHeight,
-          maxScroll    = scrollHeight - this.$scrollElement.height(),
+      var scrollLeft   = this.$scrollElement.scrollLeft() + this.options.offset,
+          scrollWidth  = this.$scrollElement[0].scrollWidth ||
+                         this.$body[0].scrollWidth,
+          maxScroll    = scrollWidth - this.$scrollElement.width(),
           offsets      = this.offsets,
           targets      = this.targets,
           activeTarget = this.activeTarget,
           i
 
-      if( scrollTop >= maxScroll )
+      if( scrollLeft >= maxScroll )
           return activeTarget != ( i=targets.last()[0] ) &&
                  this.activate(i);
 
       for(i = offsets.length; i--;) {
           if( activeTarget != targets[i] &&
-              scrollTop    >= offsets[i] &&
-              (!offsets[i+1] || scrollTop <= offsets[i+1]) )
+              scrollLeft    >= offsets[i] &&
+              (!offsets[i+1] || scrollLeft <= offsets[i+1]) )
               this.activate(targets[i]);
       }
   };
