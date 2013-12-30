@@ -1,6 +1,6 @@
 /* ========================================================================
- * Bootstrap: scrollspy.js v3.1.0
- * http://getbootstrap.com/javascript/#scrollspy
+ * Bootstrap: scrollspy.horizontal.js v3.1.0
+ * http://getbootstrap.com/javascript/#scrollspyhorizontal
  * ========================================================================
  * Copyright 2013 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -14,14 +14,14 @@
   // SCROLLSPY CLASS DEFINITION
   // ==========================
 
-  function ScrollSpy(element, options) {
+  function ScrollSpyHorizontal(element, options) {
       var href,
           process  = $.proxy(this.process, this);
 
       this.$element       = $(element).is('body') ? $(window) : $(element);
       this.$body          = $('body');
-      this.$scrollElement = this.$element.on('scroll.bs.scroll-spy.data-api', process);
-      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options);
+      this.$scrollElement = this.$element.on({ 'scroll.bs.scroll-spy-horizontal.data-api' : process });
+      this.options        = $.extend({}, ScrollSpyHorizontal.DEFAULTS, options);
       this.selector       = ( this.options.target ||
                               ((href = $(element).attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) ||//strip for ie7
                               '' ) + ' .nav li > a';
@@ -33,11 +33,11 @@
       this.process();
   };
 
-  ScrollSpy.DEFAULTS = {
+  ScrollSpyHorizontal.DEFAULTS = {
       offset: 10
   };
 
-  ScrollSpy.prototype.refresh = function () {
+  ScrollSpyHorizontal.prototype.refresh = function () {
 
       var offsetMethod = this.$element[0] == window ? 'offset' : 'position'
 
@@ -66,7 +66,7 @@
                           });
   };
 
-  ScrollSpy.prototype.process = function () {
+  ScrollSpyHorizontal.prototype.process = function () {
 
       var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset,
           scrollHeight = this.$scrollElement[0].scrollHeight ||
@@ -89,7 +89,7 @@
       }
   };
 
-  ScrollSpy.prototype.activate = function (target) {
+  ScrollSpyHorizontal.prototype.activate = function (target) {
     
       this.activeTarget = target;
 
@@ -105,35 +105,35 @@
           active = active.closest('li.dropdown')
                          .addClass('active');
 
-      active.trigger('activate.bs.scrollspy');
+      active.trigger('activate.bs.scrollspyhorizontal');
   }
 
 
   // SCROLLSPY PLUGIN DEFINITION
   // ===========================
 
-  var old = $.fn.scrollspy;
+  var old = $.fn.scrollspyhorizontal;
 
-  $.fn.scrollspy = function (option) {
+  $.fn.scrollspyhorizontal = function (option) {
       return this.each( function () { var $this   = $(this),
-                                          data    = $this.data('bs.scrollspy'),
+                                          data    = $this.data('bs.scrollspyhorizontal'),
                                           options = typeof option == 'object' && option
 
                                       if(!data )
-                                          $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)));
+                                          $this.data('bs.scrollspyhorizontal', (data = new ScrollSpyHorizontal(this, options)));
                                       if( typeof option == 'string' )
                                           data[option]();
         });
   }
 
-  $.fn.scrollspy.Constructor = ScrollSpy;
+  $.fn.scrollspyhorizontal.Constructor = ScrollSpyHorizontal;
 
 
   // SCROLLSPY NO CONFLICT
   // =====================
 
-  $.fn.scrollspy.noConflict = function () {
-      $.fn.scrollspy = old;
+  $.fn.scrollspyhorizontal.noConflict = function () {
+      $.fn.scrollspyhorizontal = old;
       return this;
   }
 
@@ -142,9 +142,9 @@
   // ==================
 
   $(window).on({ load : function () {
-      $('[data-spy="scroll"]').each(function () {
+      $('[data-spy="scrollhorizontal"]').each(function () {
           var $spy = $(this);
-          $spy.scrollspy($spy.data());
+          $spy.scrollspyhorizontal($spy.data());
       });
   }});
 
