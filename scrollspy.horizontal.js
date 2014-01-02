@@ -38,12 +38,11 @@
 
   ScrollSpyHorizontal.prototype.refresh = function () {
 
-      var offsetMethod = $.isWindow(this.$element.get(0)) ? 'offset' : 'position'
-
       this.offsets = $([]);
       this.targets = $([]);
 
-      var self     = this,
+      var self = this,
+          offsetMethod = $.isWindow(this.$element.get(0)) ? 'offset' : 'position',
           $targets = this.$body
                          .find(this.selector)
                          .map(function () {
@@ -51,7 +50,7 @@
                                 href  = $el.data('target') ||
                                         $el.attr('href'),
                                 $href = /^#\w/.test(href) &&
-                                        $(href)
+                                        $(href);
 
                             return ( $href &&
                                      $href.length &&
@@ -74,7 +73,7 @@
           offsets      = this.offsets,
           targets      = this.targets,
           activeTarget = this.activeTarget,
-          i
+          i;
 
       if( scrollLeft >= maxScroll )
           return activeTarget != ( i=targets.last()[0] ) &&
@@ -89,7 +88,7 @@
   };
 
   ScrollSpyHorizontal.prototype.activate = function (target) {
-    
+
       this.activeTarget = target;
 
       $( this.selector ).parents('.active')
@@ -116,12 +115,14 @@
   $.fn.scrollspyhorizontal = function (option) {
       return this.each( function () { var $this   = $(this),
                                           data    = $this.data('bs.scrollspyhorizontal'),
-                                          options = typeof option == 'object' && option
+                                          options = typeof option == 'object' && option;
 
                                       if(!data )
                                           $this.data('bs.scrollspyhorizontal', (data = new ScrollSpyHorizontal(this, options)));
                                       if( typeof option == 'string' )
                                           data[option]();
+                                      else if( $.isFunction(option) )
+                                               option(data);
         });
   }
 
