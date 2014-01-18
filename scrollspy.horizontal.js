@@ -80,10 +80,10 @@
                  this.activate(i);
 
       for(i = offsets.length; i--;) {
-          if( activeTarget != targets[i] &&
-              scrollLeft    >= offsets[i] &&
+          if( scrollLeft    >= offsets[i] &&
               (!offsets[i+1] || scrollLeft <= offsets[i+1]) )
-              this.activate(targets[i]);
+              return activeTarget != targets[i] &&
+                     this.activate(targets[i]);
       }
   };
 
