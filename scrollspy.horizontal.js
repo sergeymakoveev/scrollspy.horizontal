@@ -114,7 +114,8 @@
           .forEach(function(target, i){
               $(['[data-target="','"], [href="','"]'].join(target))
                .on({ click:function(){ return self.$scrollElement
-                                                  .scrollLeft(self.offsets[i]), false; } });
+                                                  .scrollLeft(self.offsets[i]); } })
+               .trigger( location.hash==target ? 'click':'' );
            });
   };
 
