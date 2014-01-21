@@ -29,6 +29,7 @@
       this.activeTarget   = null;
 
       this.refresh();
+      this.navigate();
       this.process();
   };
 
@@ -104,8 +105,18 @@
                          .addClass('active');
 
       active.trigger('activate.bs.scrollspyhorizontal');
-  }
+  };
 
+  ScrollSpyHorizontal.prototype.navigate = function () {
+      var self = this;
+      this.targets
+          .toArray()
+          .forEach(function(target, i){
+              $(['[data-target="','"], [href="','"]'].join(target))
+               .on({ click:function(){ return self.$scrollElement
+                                                  .scrollLeft(self.offsets[i]), false; } });
+           });
+  };
 
   // SCROLLSPY PLUGIN DEFINITION
   // ===========================
