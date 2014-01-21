@@ -43,26 +43,31 @@
       this.targets = $([]);
 
       var self = this,
-          offsetMethod = $.isWindow(this.$element.get(0)) ? 'offset' : 'position',
-          $targets = this.$body
-                         .find(this.selector)
-                         .map(function () {
-                            var $el   = $(this),
-                                href  = $el.data('target') ||
-                                        $el.attr('href'),
-                                $href = /^#\w/.test(href) &&
-                                        $(href);
+          offsetMethod = $.isWindow(this.$element.get(0)) ? 'offset' : 'position';
 
-                            return ( $href &&
-                                     $href.length &&
-                                     [[ $href[offsetMethod]().left + (!$.isWindow(self.$scrollElement.get(0)) && self.$scrollElement.scrollLeft()),
-                                        href ]] ) || null;
-                          })
-                         .sort(function (a, b) { return a[0] - b[0]; })
-                         .each(function () {
-                            self.offsets.push(this[0]);
-                            self.targets.push(this[1]);
-                          });
+      this.$body
+          .find(this.selector)
+          .map(function () {
+             var $el   = $(this),
+                 href  = $el.data('target') ||
+                         $el.attr('href'),
+                 $href = /^#\w/.test(href) &&
+                         $(href);
+
+             return ( $href &&
+                      $href.length &&
+                      [[ $href[offsetMethod]().left + (!$.isWindow(self.$scrollElement.get(0)) && self.$scrollElement.scrollLeft()),
+                         href ]] ) || null;
+           })
+          .sort(function (a, b) { return a[0] - b[0]; })
+          .each(function () {
+             self.offsets.push(this[0]);
+             self.targets.push(this[1]);
+           });
+
+      this.$offsets = $( this.targets
+                             .toArray()
+                             .join(',') );
   };
 
   ScrollSpyHorizontal.prototype.process = function () {
@@ -104,6 +109,11 @@
           active = active.closest('li.dropdown')
                          .addClass('active');
 
+      this.$offsets
+          .removeClass('active')
+          .filter(target)
+          .addClass('active');
+
       active.trigger('activate.bs.scrollspyhorizontal');
   };
 
@@ -113,6 +123,7 @@
           .toArray()
           .forEach(function(target, i){
               $(['[data-target="','"], [href="','"]'].join(target))
+               .first()
                .on({ click:function(){ return self.$scrollElement
                                                   .scrollLeft(self.offsets[i]); } })
                .trigger( location.hash==target ? 'click':'' );
